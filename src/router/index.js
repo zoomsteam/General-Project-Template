@@ -1,23 +1,36 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import Home from '@/views/Home.vue'
+import LiveShow from '@/views/liveShowForX/LiveShow'
+import ManageLogin from '@/views/login/ManageLogin'
+import Home from '@/views/index'
+import LiveManage from '@/views/main/LiveManage'
 
-Vue.use(Router)
-
-export default new Router({
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: Home
-    },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ '@/views/About.vue')
-    }
-  ]
-})
+export default [
+  {
+    path: '/',
+    redirect: '/login'
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: ManageLogin
+  },
+  {
+    path: '/liveShow',
+    name: 'liveShow',
+    component: LiveShow
+  },
+  {
+    path: '/home',
+    name: 'home',
+    component: Home,
+    children: [
+      {
+        path: 'liveManage',
+        name: 'liveManage',
+        component: LiveManage,
+        meta: {
+          requireAuth: true
+        }
+      }
+    ]
+  }
+]

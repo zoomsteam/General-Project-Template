@@ -20,10 +20,13 @@ export default {
       selection: [],
       // 查询条件，包括排序、搜索以及筛选
       searchCondition: {},
-      search: ''
+      userInfo: {}
     }
   },
-  mounted: function () {},
+  created () {
+    if (this.$route.query.page) this.tables.pageInfo.page = this.$route.query.page
+  },
+  mounted () { },
   methods: {
     multiSet (val) {
       if (!this.selection.hasOwnProperty('id') || this.selection.id.length === 0) {
@@ -47,8 +50,8 @@ export default {
       if (res.data.pageInfo) {
         this.tables.pageInfo = JSON.parse(JSON.stringify(res.data.pageInfo))
       }
-      res.data.isMulti && (this.tables.isMulti = res.data.isMulti)
-      res.data.isExpand && (this.tables.isExpand = res.data.isExpand)
+      res.data.hasOwnProperty('isMulti') && (this.tables.isMulti = res.data.isMulti)
+      res.data.hasOwnProperty('isExpand') && (this.tables.isExpand = res.data.isExpand)
 
       let query = JSON.parse(JSON.stringify(this.$route.query))
       this.$router.replace({
@@ -61,7 +64,7 @@ export default {
       let tdata = JSON.parse(JSON.stringify(res))
       if (that.operateConfig && that.operateConfig.optFunc) {
         for (let i in tdata.data.tbody) {
-          let temp = that.operateConfig.optFunc(tdata.data.tbody[i], 'userinfo')
+          let temp = that.operateConfig.optFunc(tdata.data.tbody[i], that.userInfo)
           let operation = []
           for (let j in temp) {
             operation.push(that.operateConfig.optType[temp[j]])

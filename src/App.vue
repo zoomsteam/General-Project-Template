@@ -1,19 +1,42 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About123</router-link>
-    </div>
-    <router-view />
+    <router-view/>
   </div>
 </template>
+
+<script>
+import { mapActions } from 'vuex'
+import { getUserInfo } from '@/api/index'
+export default {
+  components: {},
+  props: {},
+  data () {
+    return {}
+  },
+  computed: {},
+  watch: {},
+  created () {
+    if (this.$route.meta.requireAuth) this.toGetUserInfo()
+  },
+  mounted () {},
+  methods: {
+    ...mapActions([ 'ACTION_GET_USERINFO' ]),
+    async toGetUserInfo () {
+      let res = {}
+      res = await getUserInfo()
+      if (res.code && res.code === '00000') {
+        this.ACTION_GET_USERINFO(res.data)
+      }
+    }
+  }
+}
+</script>
 
 <style>
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
 }
 #nav {
